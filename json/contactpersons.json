@@ -1,0 +1,14 @@
+{
+  "persons":[
+    {
+      "name":"Ευστράτιος Γαλλόπουλος",
+      "role":"Πρόεδρος Τμήματος",
+      "email":"stratis@ceid.upatras.gr"
+    },
+    {
+      "name":"Κωνσταντίνος Μπερμπερίδης",
+      "role":"Αναπληρωτής Πρόεδρος Τμήματος",
+      "email":"berberid@ceid.upatras.gr"
+    }
+  ]
+}

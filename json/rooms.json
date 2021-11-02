@@ -1,0 +1,79 @@
+{"rooms":
+  [
+    {
+      "roomName":"ΒΑ",
+      "standardRows":{
+        "nrows":18,
+        "nseats":24
+      },
+      "exceptRows":[]
+    },
+    {
+      "roomName":"Β3",
+      "standardRows":{
+        "nrows":6,
+        "nseats":14
+      },
+      "exceptRows":[
+      ]
+    },
+    {
+      "roomName":"Β4",
+      "standardRows":{
+        "nrows":11,
+        "nseats":14
+      },
+      "exceptRows":[
+        {"rowid":2, "nseats":12}
+      ]
+    },
+    {
+      "roomName":"Γ",
+      "standardRows":{
+        "nrows":14,
+        "nseats":17
+      },
+      "exceptRows":[
+        {"rowid":1, "nseats":6}
+      ]
+    },
+    {
+      "roomName":"Δ1",
+      "standardRows":{
+        "nrows":10,
+        "nseats":11
+      },
+      "exceptRows":[
+      ]
+    },
+    {
+      "roomName":"Δ2",
+      "standardRows":{
+        "nrows":10,
+        "nseats":11
+      },
+      "exceptRows":[
+      ]
+    },
+    {
+      "roomName":"Εργ. Ηλεκτρονικής",
+      "standardRows":0,
+      "exceptRows":[]
+    },
+    {
+      "roomName":"Εργ. Λογικής Σχεδίασης",
+      "standardRows":0,
+      "exceptRows":[]
+    },
+    {
+      "roomName":"Εργ. ΒΘΑΥ",
+      "standardRows":0,
+      "exceptRows":[]
+    },
+    {
+      "roomName":"Υπολογιστικό Κέντρο",
+      "standardRows":0,
+      "exceptRows":[]
+    }
+  ]
+}

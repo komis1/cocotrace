@@ -1,0 +1,317 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Cross-Browser QRCode generator for Javascript</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="qrcode.js"></script>
+<style>
+
+
+body {
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		padding: 20px;
+		background-color: #FAFAFA;
+		font: 12pt "Tahoma";
+}
+* {
+		box-sizing: border-box;
+		-moz-box-sizing: border-box;
+}
+table{
+	width: 100%;
+	margin:0;
+	padding:0;
+	/*border: 1px solid black;*/
+	border-collapse: collapse;
+	table-layout: fixed;
+}
+.room{
+	font-size: 80px;
+	letter-spacing: 10px;
+
+}
+.row{
+	font-size: 30px;
+}
+.seat{
+	font-size: 30px;
+}
+.page {
+		width: 210mm;
+		height: 297mm;
+		margin-right:15mm;
+		margin-left:15mm;
+		padding-left:8mm;
+		padding-right:8mm;
+		padding-top:21.3mm;
+		padding-bottom:21.3mm;
+		border: 1px #D3D3D3 solid;
+		border-radius: 5px;
+		background: white;
+		box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+		background-color: #FFF8DC;
+}
+.container{
+	padding:0;
+}
+
+td{
+	width:97mm;
+	height:42.4mm;
+	margin:0mm;
+	padding:0mm;
+	outline: 1px dotted green;
+	vertical-align: middle;
+	text-align: center;
+	overflow: hidden;
+}
+
+.codediv{
+	padding: 2mm;
+	width:100%;
+	height:100%;
+	vertical-align: middle;
+	text-align: center;
+}
+
+img {
+    padding-left: 0;
+    padding-right: 0;
+		margin-top:3mm;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+@page {
+		size: A4;
+		margin: 0;
+}
+@media print {
+		html, body {
+				margin:0;
+				padding:0;
+				background-color: #FAFAc2;
+		}
+
+		.page {
+			max-width: 210mm;
+			max-height: 297mm;
+			border: initial;
+			border-radius: initial;
+			width: initial;
+			min-height: initial;
+			box-shadow: initial;
+			background: initial;
+			page-break-after: always;
+			margin-right:0mm;
+			margin-left:0mm;
+			margin-top:0mm;
+			margin-bottom:0mm;
+			padding-top:21.3mm;
+			padding-bottom:21.3mm;
+			padding-left: 8mm;
+			padding-right: 8mm;
+			background-color: #FFFFFF;
+		}
+		table {
+			height:254.4mm;
+			width:194mm;
+		  break-before: page;
+		}
+		td{
+			width:97mm;
+			height:42.4mm;
+			margin:0mm;
+			padding:0mm;
+			outline: none;
+			vertical-align: middle;
+			text-align: center;
+		}
+		hr{
+			visibility: hidden;
+		}
+		.pheader{
+			height: 21.3mm;
+			width:194mm;
+		}
+		.pfooter{
+			height: 21.3mm;
+			width:194mm;
+		}
+		.ptitle{
+			z-index: 10;
+		}
+}
+
+</style>
+<script type="text/javascript">
+
+var rjs;
+
+function readFile() {
+  let file = document.getElementById("filesel").files[0];
+
+  let reader = new FileReader();
+
+  reader.readAsText(file);
+
+  reader.onload = function() {
+    console.log(reader.result);
+		rjs= JSON.parse(reader.result);
+		roomsel = document.createElement('select');
+		roomsel.setAttribute("id","roomsel");
+		for (var i=0;i<rjs.rooms.length;i++)
+		{
+			opt = document.createElement('option');
+			opt.value = i;
+			opt.innerHTML=rjs.rooms[i].roomName;
+			roomsel.appendChild(opt);
+		}
+		document.getElementById('controls').appendChild(roomsel);
+		gobtn = document.createElement('button');
+		gobtn.innerHTML = "Make Codes";
+		gobtn.addEventListener('click', showCodes);
+		document.getElementById('controls').appendChild(gobtn);
+
+  };
+
+  reader.onerror = function() {
+    console.log(reader.error);
+  };
+
+}
+
+function showCodes()
+{
+	var node= document.getElementById("content");
+	while (node.firstChild) {
+			node.removeChild(node.firstChild);
+	}
+
+	roomid = document.getElementById("roomsel").value;
+	roomdata = rjs.rooms[roomid];
+
+	specialrows=new Array();
+	for (i=0;i<roomdata.exceptRows.length;i++)
+	{
+		specialrows.push(roomdata.exceptRows[i].rowid);
+	}
+	//console.log(specialrows);
+	//return;
+	totalrows = roomdata.standardRows.nrows+roomdata.exceptRows.length;
+	seats=new Array();
+	for (i=1;i<=totalrows;i++)
+	{
+		//console.log("row"+i);
+		if (specialrows.includes(i)) //is special row
+		{
+			//console.log("special ");
+			for(j=0;j<roomdata.exceptRows[specialrows.indexOf(i)].nseats;j++)
+			{
+				//console.log("seat"+j);
+				seat = {row:i, seat:j+1};
+				seats.push(seat);
+			}
+
+		}
+		else {
+			//console.log("normal");
+			for(j=0;j<roomdata.standardRows.nseats;j++)
+			{
+				seat = {row:i, seat:j+1};
+				seats.push(seat);
+			}
+		}
+	}
+	//console.log(seats);
+	//return;
+	console.log(roomdata);
+	contentdiv = document.getElementById("content");
+	counter=0;
+	var currrow;
+	var currtable;
+	for (i=0; i<seats.length; i++)
+	{
+			if (counter%12==0)
+			{
+				//psep = document.createElement("hr");
+				//contentdiv.appendChild(psep);
+				//pageTitle=document.createElement("div");
+				//pageTitle.className="pheader";
+				//pageTitle.innerHTML="Page "+counter/12;
+				//contentdiv.appendChild(pageTitle);
+				innerdiv = document.createElement("div");
+				innerdiv.className='page';
+				contentdiv.appendChild(innerdiv);
+				tab = document.createElement("table");
+				tab.setAttribute("id", "table"+counter);
+				innerdiv.appendChild(tab);
+				//row = document.createElement("tr");
+				//tab.appendChild(row);
+				//thead = document.createElement("td");
+				//thead.className = "pheader";
+				//thead.setAttribute("colspan", "2");
+				//thead.innerHTML="<div class=\"ptitle\">Page "+counter/12+"<div>";
+				//row.appendChild(thead);
+
+				if(counter>0)
+				{
+					//frow = document.createElement("tr");
+					//currtable.appendChild(frow);
+					//ftd = document.createElement("td");
+					//ftd.className = "pfooter";
+					//ftd.setAttribute("colspan", "2");
+					//frow.appendChild(ftd);
+					//currtable.appendChild(frow); //add footer to previous table
+				}
+				currtable=tab;
+
+			}
+			if (counter%2==0) //time to make a new row
+			{
+				row = document.createElement("tr");
+				currtable.appendChild(row);
+				currrow=row;
+			}
+			codecell = document.createElement("td");
+			codediv = document.createElement("div");
+			codediv.setAttribute("id", seats[i].row+"-"+seats[i].seat);
+			codediv.className="codediv";
+			codeText="Αίθουσα "+roomdata.roomName+", Σειρά "+seats[i].row+", Θέση "+seats[i].seat;
+			//codeText="<div><span class='room'>"+roomdata.roomName+"</span><br> <span class='row'>Σ"+seats[i].row+"</span> <span class='seat'>Θ"+seats[i].seat+"</span></div>";
+			codediv.innerHTML=codeText;
+			codecell.appendChild(codediv);
+			codeJSON={room:roomdata.roomName, row:seats[i].row, seat:seats[i].seat};
+			//console.log(roomdata.roomName+", "+i+", "+j);
+			currrow.appendChild(codecell);
+
+			var qrcode = new QRCode(document.getElementById(seats[i].row+"-"+seats[i].seat), {
+				width : 90,
+				height : 90,
+				useSVG: false
+			});
+			qrcode.makeCode(JSON.stringify(codeJSON));
+
+
+			counter++;
+
+		}
+
+}
+
+
+</script>
+</head>
+<body>
+<div id="controls">
+	<input type="file" id="filesel"/>
+	<input type="button" onclick="readFile()" value="Load"/>
+</div>
+<div id="content" class="container">
+</div>
+</body>

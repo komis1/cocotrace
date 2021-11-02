@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Andreas Komninos for CEID, UPatras, GR">
+
+  <title>COCOTR@CE</title>
+
+  <link rel="stylesheet" rel="preload" as="style" onload="this.rel='stylesheet';this.onload=null"
+    href="css/normalize.css">
+  <link rel="stylesheet" rel="preload" as="style" onload="this.rel='stylesheet';this.onload=null"
+    href="css/milligram.min.css">
+  <link rel="stylesheet" rel="preload" as="style" onload="this.rel='stylesheet';this.onload=null"
+    href="css/ceidcovid.css">
+
+
+  <script type="text/javascript" src="js/zxing-index.js"></script>
+  <script type = "text/javascript" src="js/idb-index-min.js"></script>
+  <script type = "text/javascript" src="js/ceidcovid.js"></script>
+</head>
+
+<body>
+
+  <main class="wrapper" style="padding-top:2em">
+
+    <section class="container" id="demo-content">
+      <h1 class="title">COCOTR@CE</h1>
+      <h4><em><strong>CO</strong>VID-19 <strong>Co</strong>ntact <strong>Tr</strong>acing <strong>@ CE</strong>ID</em></h4>
+
+      <p>Ατομικό ιστορικό παρουσίας για τα μαθήματα του ΤΜΗΥΠ με σεβασμό στην <a href="#footer">ιδιωτικότητα των χρηστών</a>.</p>
+
+      <div id="cameradiv">
+        <button class="collapsible">Αναγνωση με καμερα</button>
+        <div class="content">
+
+          <div id="sourceSelectPanel" style="display:inline">
+            <label for="sourceSelect">Αλλαγή πηγής video:</label>
+            <select id="sourceSelect" style="max-width:400px">
+            </select>
+          </div>
+
+          <span><strong>Camera: </strong></span>
+          <a class="button btnExtras" id="startButton">Start</a>
+          <a class="button btnExtras" id="stopButton">Stop</a>
+
+          <label>Αποτέλεσμα:</label>
+          <pre><code id="result"></code></pre>
+          <div id="videodiv" style="width:100%; height:200px">
+            <video id="video" width="100%" height="100%" style="border: 1px solid gray"></video>
+          </div>
+
+
+      </div>
+    </div>
+
+    <div id="manualdiv">
+      <button class="collapsible">Χειροκινητη εισοδος</button>
+      <div class="content">
+        <table>
+          <tr>
+            <td><label for="roomsel">Αίθουσα</label></td>
+            <td><select id="roomsel"></select></td>
+          </tr>
+          <tr>
+            <td><label for="row">Σειρά</label></td>
+            <td><input type="number" id="row"/></td>
+          </tr>
+          <tr>
+            <td><label for="seat">Θέση</label></td>
+            <td><input type="number" id="seat"/></td>
+          </tr>
+        </table>
+        <label>Αποτέλεσμα:</label>
+        <pre><code id="manresult"></code></pre>
+        <a class="button" id="savebtn">Αποθηκευση</a>
+      </div>
+    </div>
+
+    </section>
+    <h2>Το ημερολόγιό μου</h2>
+    <div id ="recordList">
+    </div>
+
+    <!-- The Modal -->
+    <div id="mailModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <p>Παρακαλώ εισάγετε τα στοιχεία σας. Θα αποσταλούν τα δεδομένα των προηγούμενων 7 ημερών από την <span id="dd"></span> </p>
+        <table>
+          <tr>
+            <td><label for="sname">Όνομα</label></td>
+            <td><input type="text" id="sname"></input></td>
+          </tr>
+          <tr>
+            <td><label for="ssurname">Επώνυμο</label></td>
+            <td><input type="text" id="ssurname"/></td>
+          </tr>
+          <tr>
+            <td><label for="sam">ΑΜ</label></td>
+            <td><input type="number" id="sam"></td>
+          </tr>
+        </table>
+        <span id="modalErrors" style="color:red; font-size:12px"></span>
+        <button id="sendemail">Αποστολή email</button>
+      </div>
+
+    </div>
+
+    <footer class="footer" id="footer">
+      <section class="container">
+        <p class="footnotes">Η εφαρμογή έχει κατασκευαστεί για να διευκολύνει την ιχνηλάτηση στενών επαφών σε περίπτωση κρούσματος COVID-19, μέσω
+          της τήρησης ιστορικού των θέσεων που έχει καθίσει ο φοιτητής κατά τη διάρκεια μαθημάτων. Η εφαρμογή διατηρεί τις πληροφορίες που καταχωρείτε αποκλειστικά στο κινητό σας και δεν τις αποστέλλει σε κάποιο server.
+          Τα προσωπικά σας στοιχεία (Όνομα, Επώνυμο, ΑΜ) καταχωρούνται μόνο στο κινητό σας και μόνο στην περίπτωση που επιθυμείτε να αποστείλετε τα αρχεία σας
+        στον συντονιστή COVID του τμήματος. Η αποστολή αυτών των στοιχείων γίνεται αποκλειστικά με email και μόνο κατόπιν της δικής σας έγκρισης.</p>
+
+
+        <p class="footnotes">Για ερωτήσεις, προτάσεις βελτίωσης ή προβλήματα μπορείτε να απεθυνθείτε στον <a href="mailto:akomninos@ceid.upatras.gr?subject=COCOTR@CE">δημιουργό της εφαρμογής</a></p>
+
+        <p class="footnotes">&copy; Andreas Komninos, CEID, University of Patras, 2021. Using the ZXing TypeScript library. Licensed under the <a target="_blank"
+            href="https://github.com/zxing-js/library#license" title="MIT">MIT license</a>.</p>
+      </section>
+    </footer>
+
+  </main>
+
+</body>
+
+</html>
