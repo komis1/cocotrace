@@ -1,5 +1,6 @@
 # cocotrace
 A QR-Code based web app to help students log their seating in university classrooms to facilitate COVID contact tracing
+
 <img src="https://user-images.githubusercontent.com/6568972/139866879-453316a1-31d3-45bb-89e6-4c179c992f3f.png" width="20%" height="20%"> <img src="https://user-images.githubusercontent.com/6568972/139865410-23667add-6a9a-483e-a342-00664a729cd0.png" width="20%" height="20%">
 
 In September 2021, the Hellenic Government re-opened universities for in-person teaching, under certain restrictions (access to vaccinated or PCR-tested persons, or to persons recovered from COVID within the last 6 months only). Classrooms were to be filled at 100% seating capacity. One problem with the given framework for re-opening universities is the difficulty of contact-tracing upon confirmed COVID cases, since classrooms can be very large (>300 persons) and of course notifying an entire cohort for the existence of a case can be quite ineffective.
