@@ -59,7 +59,7 @@
       "roomName":"Εργ. Ηλεκτρονικής",
       "standardRows":{
         "nrows":1,
-        "nseats":1
+        "nseats":2
       },
       "exceptRows":[]
     },
@@ -67,7 +67,7 @@
       "roomName":"Εργ. Λογικής Σχεδίασης",
       "standardRows":{
         "nrows":1,
-        "nseats":1
+        "nseats":2
       },
       "exceptRows":[]
     },
@@ -75,7 +75,7 @@
       "roomName":"Εργ. ΒΘΑΥ",
       "standardRows":{
         "nrows":1,
-        "nseats":1
+        "nseats":2
       },
       "exceptRows":[]
     },
@@ -83,7 +83,7 @@
       "roomName":"Υπολογιστικό Κέντρο",
       "standardRows":{
         "nrows":1,
-        "nseats":1
+        "nseats":2
       },
       "exceptRows":[]
     }
