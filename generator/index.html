@@ -119,7 +119,7 @@ img {
 			background-color: #FFFFFF;
 		}
 		table {
-			height:254.4mm;
+			max-height:254.4mm;
 			width:194mm;
 		  break-before: page;
 		}
@@ -152,6 +152,8 @@ img {
 <script type="text/javascript">
 
 var rjs;
+var tabrows = 6; //how many rows of labels
+var tabcols = 2; //how many columns of labels
 
 function readFile() {
   let file = document.getElementById("filesel").files[0];
@@ -202,7 +204,7 @@ function showCodes()
 		specialrows.push(roomdata.exceptRows[i].rowid);
 	}
 	//console.log(specialrows);
-	//return;
+
 	totalrows = roomdata.standardRows.nrows+roomdata.exceptRows.length;
 	seats=new Array();
 	for (i=1;i<=totalrows;i++)
@@ -237,42 +239,19 @@ function showCodes()
 	var currtable;
 	for (i=0; i<seats.length; i++)
 	{
-			if (counter%12==0)
+			if (counter%(tabrows*tabcols)==0)
 			{
-				//psep = document.createElement("hr");
-				//contentdiv.appendChild(psep);
-				//pageTitle=document.createElement("div");
-				//pageTitle.className="pheader";
-				//pageTitle.innerHTML="Page "+counter/12;
-				//contentdiv.appendChild(pageTitle);
 				innerdiv = document.createElement("div");
 				innerdiv.className='page';
 				contentdiv.appendChild(innerdiv);
 				tab = document.createElement("table");
 				tab.setAttribute("id", "table"+counter);
 				innerdiv.appendChild(tab);
-				//row = document.createElement("tr");
-				//tab.appendChild(row);
-				//thead = document.createElement("td");
-				//thead.className = "pheader";
-				//thead.setAttribute("colspan", "2");
-				//thead.innerHTML="<div class=\"ptitle\">Page "+counter/12+"<div>";
-				//row.appendChild(thead);
 
-				if(counter>0)
-				{
-					//frow = document.createElement("tr");
-					//currtable.appendChild(frow);
-					//ftd = document.createElement("td");
-					//ftd.className = "pfooter";
-					//ftd.setAttribute("colspan", "2");
-					//frow.appendChild(ftd);
-					//currtable.appendChild(frow); //add footer to previous table
-				}
 				currtable=tab;
 
 			}
-			if (counter%2==0) //time to make a new row
+			if (counter%tabcols==0) //time to make a new row
 			{
 				row = document.createElement("tr");
 				currtable.appendChild(row);
