@@ -1,6 +1,6 @@
 //global variables
-const dbName = "recordsDB"; //database name
-const osName = "records";   //object store name
+var dbName = "recordsDB"; //database name
+var osName = "records";   //object store name
 var db;                     //database object
 
 var rooms=new Array();
@@ -9,8 +9,25 @@ var sname;
 var ssurname;
 var sam;
 
+var deferredPrompt;
+
+//redirect if not https
+if (window.location.protocol === 'http:') {
+  link = window.location.href.replace('http://', 'https://');
+  window.location.assign(link);
+}
+
 //Entry point for everything
 window.addEventListener('load', function(evt){
+
+  //register service serviceWorker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+             .register('./sw.js');
+  }
+  else{
+    console.log("No service worker in navigator");
+  }
 
   // Get the modal
   var modal = document.getElementById("mailModal");
@@ -21,17 +38,94 @@ window.addEventListener('load', function(evt){
   // When the user clicks on <span> (x), close the modal
   span.onclick = function() {
     modal.style.display = "none";
-  }
+  };
 
   // When the user clicks anywhere outside of the modal, close it
   window.onclick = function(event) {
     if (event.target == modal) {
       modal.style.display = "none";
     }
+  };
+
+  //are we in PWA mode?
+  /*if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+    document.getElementById("install").style.display="none";
+    console.log('display-mode is standalone');
+  }*/
+
+  var urlParams = new URLSearchParams(window.location.search);
+  var myParam = urlParams.get('mode');
+  console.log(myParam);
+  if(myParam=="standalone")
+  {
+    document.getElementById("install").style.display="none";
+    console.log('display-mode is standalone');
   }
+  //Add pwa install event listeners
+
+  window.addEventListener('beforeinstallprompt', function (e){
+    e.preventDefault();
+    deferredPrompt = e;
+    console.log('beforeinstallprompt event was fired.');
+
+  window.addEventListener('appinstalled', function(e){
+    console.log('install event was fired.');
+    document.getElementById("install").style.display="none";
+  });
+  //add install button listener
+  document.getElementById("install").addEventListener('click', function(e){
+    deferredPrompt.prompt();
+    deferredPrompt = null;
+    document.getElementById("install").style.display="none";
+    });
+  });
+
+  //only for Chrome
+  try{
+    navigator.getInstalledRelatedApps().then(
+      function(val){
+          console.log(val);
+          if(val.length>0)
+          {
+            document.getElementById("install").style.display="none";
+          }
+      },
+      function(error){
+        console.log(error);
+      }
+    );
+  }
+  catch (err)
+  {
+    //ios or firefox
+    document.getElementById("install").style.display="none";
+    console.log("getInstalledRelatedApps not supported");
+  }
+
   checkDB();
   loadDevices();
 });
+
+async function purgeOldData()
+{
+  var lowdate = new Date("2021-01-01");
+  var highdate = new Date();
+  highdate = addDays(highdate, -30);
+  var keyRangeValue = IDBKeyRange.bound(lowdate, highdate);
+  await db.getAllFromIndex(osName, 'dateidx', keyRangeValue)
+  .then(
+    function(val){
+      console.log("Deleted all before "+longDateToShort(highdate));
+      console.log(val);
+      loadRecords();
+    },
+    function (err){
+      console.log("Could not delete all before "+longDateToShort(highdate));
+      loadRecords();
+    }
+  );
+}
+
 
 function openModal(date){
   var modal = document.getElementById("mailModal");
@@ -77,7 +171,7 @@ var collHandler = function (evt) {
   } else {
     content.style.maxHeight = content.scrollHeight + "px";
   }
-}
+};
 
 //calculate event listeners for collapsible buttons
 function calcCollapsibles(){
@@ -89,8 +183,8 @@ function calcCollapsibles(){
     coll[i].removeEventListener("click", collHandler);
   }
   //add new listeners
-  for (var i = 0; i < coll.length; i++) {
-    coll[i].addEventListener("click", collHandler);
+  for (var j = 0; j < coll.length; j++) {
+    coll[j].addEventListener("click", collHandler);
   }
 }
 
@@ -113,7 +207,7 @@ function checkDB() {
   if (dbOK)
     setupDB().then(
       function(){
-        loadRecords();
+        purgeOldData();
         readFile();
         document.getElementById('savebtn').addEventListener('click', function(){
           record={
@@ -121,7 +215,7 @@ function checkDB() {
             room:document.getElementById("roomsel").value,
             row:parseInt(document.getElementById("row").value),
             seat:parseInt(document.getElementById("seat").value)
-            }
+          };
           if (document.getElementById("row").value== "" || document.getElementById("seat").value== "")
           {
             document.getElementById("manresult").innerHTML="Πρέπει να δώστε τιμές για τη σειρά/θέση";
@@ -131,7 +225,7 @@ function checkDB() {
             writeRecord(record);
             document.getElementById("row").value="";
             document.getElementById("seat").value="";
-            document.getElementById("manresult").innerHTML="Data saved";
+            document.getElementById("manresult").innerHTML="Επιτυχής αποθήκευση.";
             loadRecords();
           }
         });
@@ -181,12 +275,11 @@ async function loadRecords(){
   lowdate.setSeconds(0);
   lowdate.setMilliseconds(0);
   var keyRangeValue = IDBKeyRange.bound(lowdate, highdate);
-  console.log("From "+lowdate+"\n To "+highdate);
   await db.getAllFromIndex(osName, 'dateidx', keyRangeValue)
   .then(
     function(rs){
       recdiv = document.getElementById("recordList");
-      console.log(rs);
+      //console.log(rs);
       //clear webpage content
       while (recdiv.firstChild) {
           recdiv.removeChild(recdiv.firstChild);
@@ -214,17 +307,17 @@ async function loadRecords(){
           expbtn.setAttribute("onClick", "openModal(\""+rs[i].date+"\")");
           content.appendChild(expbtn);
         }
-        const row = document.createElement("tr");
-        const timecell = document.createElement("td");
+        var row = document.createElement("tr");
+        var timecell = document.createElement("td");
         timecell.innerHTML = convertDate(rs[i].date);
-        const roomcell = document.createElement("td");
+        var roomcell = document.createElement("td");
         roomcell.innerHTML = rs[i].room+", Σειρά: "+rs[i].row+", Θέση: "+rs[i].seat;
         row.appendChild(timecell);
         row.appendChild(roomcell);
         currtable.appendChild(row);
     }
     calcCollapsibles();
-  })
+  });
 }
 
 function addDays(date, days) {
@@ -317,12 +410,12 @@ function longDateToShort(d)
 function loadDevices()
 {
   var selectedDeviceId;
-  const codeReader = new ZXing.BrowserQRCodeReader();
+  var codeReader = new ZXing.BrowserQRCodeReader();
   console.log('ZXing code reader initialized');
   codeReader.listVideoInputDevices()
     .then(
       function(videoInputDevices){
-        const sourceSelect =   document.getElementById('sourceSelect');
+        var sourceSelect =   document.getElementById('sourceSelect');
         //console.log(videoInputDevices);
         selectedDeviceId = videoInputDevices[0].deviceId;
         if (videoInputDevices.length >= 1) {
@@ -344,9 +437,9 @@ function loadDevices()
     sourceSelect.onchange = function(){
       selectedDeviceId = sourceSelect.value;
       codeReader.reset();
-    }
+    };
 
-    const sourceSelectPanel = document.getElementById('sourceSelectPanel');
+    var sourceSelectPanel = document.getElementById('sourceSelectPanel');
     sourceSelectPanel.style.display = 'block';
 
     //start camera for qrcode reading
@@ -357,9 +450,9 @@ function loadDevices()
       codeReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then(
          function(result){
             resultJSON = JSON.parse(result.text);
-            document.getElementById('result').textContent = "Room: "+resultJSON.room+
-                                                            " Row: "+resultJSON.row+
-                                                            " Seat: "+resultJSON.seat;
+            document.getElementById('result').textContent = "Αίθ.: "+resultJSON.room+
+                                                            " Σειρά: "+resultJSON.row+
+                                                            " Θέση: "+resultJSON.seat;
             presenceRecord = {
               date: new Date(),
               room:resultJSON.room,
@@ -371,7 +464,7 @@ function loadDevices()
             codeReader.reset();
             videodiv.style.display = "inline";
             loadRecords();
-      })
+      });
       console.log('Started decode from camera with id '+selectedDeviceId);
 
     });

@@ -1,0 +1,48 @@
+{
+  "name": "COCOTR@CE",
+  "short_name": "COCOTR@CE",
+  "lang": "el-GR",
+  "start_url": "./index.html?mode=standalone",
+  "display": "standalone",
+  "theme_color": "#9b4dca",
+  "background_color": "white",
+  "scope":"./",
+  "related_applications": [
+    {
+    "platform": "webapp",
+    "url": "./manifest.webmanifest"
+    }
+  ],
+  "icons": [
+    {
+      "src": "imgs/appicon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "imgs/appicon-256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "imgs/appicon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "imgs/appicon-152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "imgs/appicon-144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "imgs/appicon-128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    }
+  ]
+}

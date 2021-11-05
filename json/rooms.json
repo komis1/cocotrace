@@ -20,7 +20,7 @@
     {
       "roomName":"Β4",
       "standardRows":{
-        "nrows":10,
+        "nrows":11,
         "nseats":14
       },
       "exceptRows":[
@@ -57,34 +57,22 @@
     },
     {
       "roomName":"Εργ. Ηλεκτρονικής",
-      "standardRows":{
-        "nrows":1,
-        "nseats":2
-      },
+      "standardRows":0,
       "exceptRows":[]
     },
     {
       "roomName":"Εργ. Λογικής Σχεδίασης",
-      "standardRows":{
-        "nrows":1,
-        "nseats":2
-      },
+      "standardRows":0,
       "exceptRows":[]
     },
     {
       "roomName":"Εργ. ΒΘΑΥ",
-      "standardRows":{
-        "nrows":1,
-        "nseats":2
-      },
+      "standardRows":0,
       "exceptRows":[]
     },
     {
       "roomName":"Υπολογιστικό Κέντρο",
-      "standardRows":{
-        "nrows":1,
-        "nseats":2
-      },
+      "standardRows":0,
       "exceptRows":[]
     }
   ]

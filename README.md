@@ -49,7 +49,9 @@ It will be useful if you print some examples on plain A4 first by changing the `
 ## Using COCOTR@CE
 First, edit the `/json/contactperson.json` file to provide the contact details of the departmental authorities responsible for handling the reporting of COVID cases. Then upload the files to a web server, and remember to include the room structure JSON you generated earlier in the `/json` subfolder. **To be able to use the camera to read QR codes, your web server must have an HTTPS certificate!** From there on, the application is pretty much self-explanatory to use.
 
-Note that the application displays only the last 7 days of logged data so that the users do not get overloaded with information. The entire log is still kept in the device's storage though, until the user clears website data. This behaviour can be edited in the code.
+Note that the application displays only the last 7 days of logged data so that the users do not get overloaded with information. The seating log records are kept for 30 days in the device's storage, or until the user clears website data. This behaviour can be edited in the code.
+
+COCOTR@CE is a progressive web app, meaning that users can install it as a stand-alone application on their phone, and it works completely offline without need for being connected to the Internet (except for accessing it the first time).
 
 ### Sending seat logs to a departmental authority
 The user simply selects a date from their log, and clicks on the Send to COVID Coordinator button. The application will generate an email containg the logs of the 7 days preceding that date, and the user can send it to the coordinators. The number of days for which to send logs can be edited in code.
