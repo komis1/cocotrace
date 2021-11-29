@@ -362,7 +362,7 @@ async function fetchRecords()
                         "AM: "+localStorage.getItem("sam") +"\n\n";
 
         for (i=0;i<set.length;i++){
-          bodytext+="Ημερομηνία: "+longDateToShort(set[i].date)+", Αίθουσα: "+set[i].room+", Σειρά: "+set[i].row+", Θέση: "+set[i].seat+"\n";
+          bodytext+="Ημερομηνία: "+convertDate(set[i].date)+", Αίθουσα: "+set[i].room+", Σειρά: "+set[i].row+", Θέση: "+set[i].seat+"\n";
         }
 
         var xhttp = new XMLHttpRequest();

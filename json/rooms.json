@@ -72,8 +72,14 @@
     },
     {
       "roomName":"Υπολογιστικό Κέντρο",
-      "standardRows":0,
-      "exceptRows":[]
+      "standardRows": {
+      	"nrows":2,
+      	"nseats":19
+      },
+      "exceptRows":[
+      	{"rowid":1, "nseats":17},
+      	{"rowid":2, "nseats":17}
+      ]
     }
   ]
 }
